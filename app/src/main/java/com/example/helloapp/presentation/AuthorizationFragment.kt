@@ -9,19 +9,17 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.helloapp.R
 import com.example.helloapp.databinding.FragmentAuthorizationBinding
-import com.example.helloapp.domain.usecase.ShowSnackBarUseCase
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AuthorizationFragment : Fragment() {
 
 	private lateinit var binding: FragmentAuthorizationBinding
 	private val viewModel: AuthorizationViewModel by viewModels()
-
-	@Inject
-	lateinit var snackBarUseCase: ShowSnackBarUseCase
 
 	companion object {
 
@@ -110,7 +108,7 @@ class AuthorizationFragment : Fragment() {
 		with(binding) {
 			progressBar.visibility = View.GONE
 			buttonSignIn.visibility = View.VISIBLE
-			snackBarUseCase.showSnackBar(buttonSignIn, MESSAGE + content.weatherEntity.temp.toString())
+			showSnackBar(buttonSignIn, MESSAGE + content.weatherEntity.temp.toString())
 		}
 
 	}
@@ -119,7 +117,7 @@ class AuthorizationFragment : Fragment() {
 		with(binding) {
 			progressBar.visibility = View.GONE
 			buttonSignIn.visibility = View.VISIBLE
-			snackBarUseCase.showSnackBar(binding.buttonSignIn, text.message)
+			showSnackBar(binding.buttonSignIn, text.message)
 		}
 	}
 
@@ -138,6 +136,15 @@ class AuthorizationFragment : Fragment() {
 					editTextPassword.text.toString()
 				)
 			}
+		}
+	}
+
+	private fun showSnackBar(view: View, message: String) {
+		context?.let {
+			Snackbar.make(view, message, Snackbar.LENGTH_LONG)
+				.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE)
+				.setBackgroundTint(it.getColor(R.color.main_color))
+				.show()
 		}
 	}
 
